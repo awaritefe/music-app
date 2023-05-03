@@ -198,9 +198,9 @@ export default {
         email: 'required|min:5|max:25|email',
         age: 'required|min_value:16|max_value:100',
         password: 'required|min:9|max:20|not_one_of:password',
-        confirm_password: 'confirmed:@password',
-        country: 'required|not_one_of:Narnia',
-        tos: 'required'
+        confirm_password: 'passwords_mismatch:@password',
+        country: 'required|country_excluded:Narnia',
+        tos: 'tos'
       },
       userData: {
         country: 'UK'
