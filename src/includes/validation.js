@@ -1,4 +1,10 @@
-import { Form as VeeForm, Field as VeeField, defineRule, ErrorMessage } from 'vee-validate'
+import {
+  Form as VeeForm,
+  Field as VeeField,
+  defineRule,
+  ErrorMessage,
+  configure
+} from 'vee-validate'
 import {
   required,
   min,
@@ -9,6 +15,8 @@ import {
   max_value as maxVal,
   confirmed,
   not_one_of as notOneOf,
+  min_value,
+  max_value
 } from '@vee-validate/rules'
 
 export default {
@@ -18,13 +26,39 @@ export default {
     app.component('ErrorMessage', ErrorMessage)
 
     defineRule('required', required)
+    defineRule('tos', required)
     defineRule('min', min)
     defineRule('max', max)
     defineRule('alpha_spaces', alphaSpaces)
     defineRule('email', email)
     defineRule('min_value', minVal)
     defineRule('max_value', maxVal)
-    defineRule('confirmed', confirmed)
+    defineRule('passwords_mismatch', confirmed)
     defineRule('not_one_of', notOneOf)
+    defineRule('country_excluded', notOneOf)
+
+    configure({
+      generateMessage: (ctx) => {
+        const messages = {
+          required: `The field ${ctx.field} is required!`,
+          min: `The field ${ctx.field} is too short!`,
+          max: `The field ${ctx.field} is too long!`,
+          alphaSpaces: `The field ${ctx.field} may only contain alphabetical characters and spaces!`,
+          email: `The field ${ctx.field} must be a valid email!`,
+          min_value: `The field ${ctx.field} is too low!`,
+          max_value: `The field ${ctx.field} is too high!`,
+          not_one_of: `You are not allowed to use this value for the field ${ctx.field}.`,
+          country_excluded: 'Due to restrictions, we do not allow users from this location',
+          passwords_mismatch: 'The passwords do not match!',
+          tos: 'You must accept the Terms of Service.'
+        }
+
+        const message = messages[ctx.rule.name]
+          ? messages[ctx.rule.name]
+          : `The field ${ctx.field} is invalid!`
+
+        return message
+      }
+    })
   }
 }
