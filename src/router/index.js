@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import AboutView from '@/views/AboutView.vue'
 import Manage from '@/views/Manage.vue'
+import useUserStore from '@/stores/user'
 
 const routes = [
   {
@@ -16,8 +17,26 @@ const routes = [
   },
   {
     name: 'manage',
+    // alias: '/manage',
     path: '/manage-music',
-    component: Manage
+    component: Manage,
+    beforeEnter: (to, from, next) => {
+      if (!to.meta.requiresAuth) {
+        next()
+        return
+      }
+
+      const store = useUserStore()
+
+      if (store.userLoggedIn) {
+        next()
+      } else {
+        next({ name: 'home' })
+      }
+    },
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/manage',
@@ -33,6 +52,12 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
   linkExactActiveClass: 'text-yellow-500'
+})
+
+router.beforeEach((to, from, next) => {
+  console.log('Global Gaurd')
+
+  next()
 })
 
 export default router
