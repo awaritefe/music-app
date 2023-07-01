@@ -46,12 +46,16 @@
 <script>
 import { songsCollection } from '@/includes/firebase'
 import AppSongItem from '@/components/SongItem.vue'
+// import IconSecondary from '@/directives/icon-secodary'
 
 export default {
   name: 'HomeView',
   components: {
     AppSongItem
   },
+  // directives: {
+  //   'icon-secondary': IconSecondary
+  // },
   data() {
     return {
       songs: [],
