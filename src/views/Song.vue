@@ -134,11 +134,6 @@ export default {
 
     this.song = docSnapshot.data()
 
-    this.song.comment_count += 1
-    await songsCollection.doc(this.$route.params.id).update({
-      comment_count: this.song.comment_count
-    })
-
     this.getComments()
   },
   methods: {
@@ -158,6 +153,11 @@ export default {
         uid: auth.currentUser.uid
       }
       await commentsCollection.add(comment)
+
+      this.song.comment_count += 1
+      await songsCollection.doc(this.$route.params.id).update({
+        comment_count: this.song.comment_count
+      })
 
       this.getComments()
 
